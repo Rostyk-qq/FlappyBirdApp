@@ -1,0 +1,235 @@
+FlappyBird Create 
+
+примітка коли м використовуємо id для задання його 
+елементу типу модифікатора то вбільшості ми використовуємо його
+в js а селектор тобто className - ми використовуємо в css 
+
+початок роботи 
+html 
+створення canvas для самого бакграуду тобто для 
+динамічної ділянки коду 
+
+css 
+background-image: linear-gradient(to right, #90ee90, #d4d4d4);
+background-color - не бачить linear-gradient
+
+допомагають замість media
+width: clamp(300px, 70vw, 400px);
+height: clamp(350px, 70vh, 500px);
+
+
+примітка для canvas потрібно прописувати width i height 
+інлайн тобто зразу в елементі
+
+js 
+ми отримуємо canvas поле 
+const canvas = document.querySelector('#game__canvas');
+і зразу для нього ми прописуємо context в розширенні 2d 
+тобто ми цей контекст використовуємо для малювання фігур 
+додавання фото і тд
+
+далі отримуємо кнопки для restartButton, екранний лічильник 
+
+також контейнер для того шоб коли зявляється endMenu ми цей контейнер
+блюрили 
+
+далі ми створюємо картинку точніше беоемо її з assets  
+
+const flappyImage = new Image();
+flappyImage.src = 'assets/flappy_dunk.png';
+
+далі створюємо констанки
+для прижку пташки 
+її довжина, висота
+також ширена колони, відступ між верхньою і нижньою 
+колоною 
+
+
+змінні для птаха це розташування X Y 
+Velocity - швидкість 
+Acceleration - прискорення 
+
+для колонок 
+pipeX - позиція по X
+pipeY - позиція по Y якшо canvas.height === 500
+то висота колонки буде від 75 до 300
+
+для bool 
+я додав для того шоб починаи рух після кліку 
+
+
+для Score i Iteration 
+scoreDisplay = document.querySelector('#game__score'); екранний лічильник 
+score = 0; для кожного разу 
+highScore = 0; для більшого 
+
+клік на клавіатуру 
+в нас є 2 event для нажимання 
+на клавіатуру це 
+keydown i keyup 
+keydown - коли ми нажали кнопку 
+keyup - нажали і відпустили  
+
+приклад застосування 
+document.body.onkeyup = (e) => {
+    if(e.code === 'Space'){
+        для швидкості птаха ставимо  
+        початкове тобто стрибок 
+        і bool = true  тобто після кліку ми зможемо 
+        робити рух 
+    }
+}
+
+також клік на кнопку в nedMenu 
+для завершення 
+після її кліку 
+ми закриваємо endMenu i 
+скидаємо параметри 
+і знов запускаємо loop(); 
+
+тут ми створюємо функції для роботи 
+
+function increaseScore(){ - ця функція викликається 
+тоді коли Xbird === Xpipe в loop поовірка і виклик
+    для ітерування тобто збільшення лічильників 
+    score = score + 1 - це простий лічильник 
+    game__score.innerHTML = score - екранний лічильник також збільшуємо 
+}
+
+
+тепер ми провіряємо на стик з колонами птаха 
+
+function checkHitWithPipe(){
+    створюємо обєкти для легкодоступності 
+    const birdParams = {
+        y: birdY, 
+        x: birdX,
+        width: BIRD_WIDTH,
+        height: BIRD_HEIGHT
+    }
+    const pipeTop = {
+        y: pipeY - PIPE_GAP, тут верхній без проміжку між нижнім і верхнім 
+        x: pipeX,
+        width: PIPE_WIDTH,
+        height: pipeY
+    }
+    const pipeBottom = {
+        y: pipeY + PIPE_GAP, для нижнього в відступом  
+        x: pipeX,
+        width: PIPE_WIDTH,
+    }
+    if(birdParams.x + birdParams.width + 11 > pipeTop.x && pipeTop.x + pipeTop.width - 11 > birdParams.x
+        && pipeTop.height > birdParams.y){
+            return true
+    }
+    if(birdParams.x + birdParams.width + 11 > pipeBottom.x && pipeBottom.x + pipeBottom.width - 11 > birdParams.x
+        && pipeBottom.y < birdParams.y + (birdParams.height * 1.67)){
+            return true
+    }
+    if(birdParams.y < 0 || birdParams.y + (birdParams.height * 1.67) >= canvas.height){
+        return true
+    }
+}
+
+ховаємо endMenu
+function hideEndMenu(){
+    document.querySelector('#end__menu').style.display = 'none';
+    gameContainer.classList.remove('blur__container');
+
+    blur__container - він є в стилях для зміни 
+
+    абнуляємо 
+    score = 0
+    game__score.innerHTML = 0
+}
+показуємо endMenu
+function showEndMenu(){
+    document.querySelector('#end__menu').style.display = 'flex';
+    gameContainer.classList.add('blur__container');
+
+    if(score > highScore){ якшо те шо ітерується більше більшого то ми це 
+    значення присвоюємо більшому 
+        highScore = score
+    }
+    ставимо значення в innerHTML(бо значення в span) 
+    document.querySelector('#best__score').innerHTML = highScore;
+    document.querySelector('#end__score').innerHTML = score;
+}
+
+скидуємо налаштування тобто параметри на початкові 
+function resetGame(){
+    pipeX = 400
+
+    робимо рондомну відстань 
+    pipeY = Math.floor(Math.random() * (350 - 40) + 40)
+
+    birdX = 50;
+    birdY = 220; ставимо посередині тобто відступ від верху 
+    birdVelocity = 0;
+    birdAcceleration = 0.1;
+
+    bool = false
+}
+коли завершилася гра то ми показуємо кінцеве меню 
+function endGame(){
+    showEndMenu()
+}
+тобто коли є удар який ми провіряємо позицією x y птаха 
+і x y pipe 
+ми його провіряємо в loop якшо 
+провірка на стик повертає true 
+то ми викликаємо endGame
+в ньому showEndMenu()
+далі через кнопку restart 
+ми викликаємо hideEndMenu() 
+і loop()
+i resetGame()
+
+
+ітерування тобто промальовка фігур рух 
+також потрібно викорисовувати setInterval() 
+а не requestAnimationFrame
+тому шо ми самі налаштовуємо setInterval() і він для кожного присторую 
+буде працювати одинаково тобто з одиноковою швидкістю  
+requestAnimationFrame - ліпше не викорисовувати
+
+function loop(){
+    // clear every loop iteration
+    context.clearRect(0, 0, canvas.width, canvas.height); тобто це при зміні позиції фігур ми оновлюємо весь canvas
+
+    // Draw Flappy 
+    малюємо фото з X i Y 
+    context.drawImage(flappyImage, birdX, birdY);
+
+    // Draw Pipe 
+    fillStyle = 'red itc' - ставить колір для того чого 
+    ми пропишемо fillRect - це майже те саме щой малювання image 
+    перші 2 параметри це x, y тобто позиціонування два наступні 
+    це width і height 
+
+    context.fillStyle = '#333';
+    context.fillRect(pipeX, 0, PIPE_WIDTH, pipeY - 300px)
+    context.fillRect(pipeX, pipeY + PIPE_GAP - позиція з відступом, PIPE_WIDTH, canvas.height - (pipeY + PIPE_GAP))
+
+    // pipeY === 300, pipeX === 400 це leftX topY PIPE_WIDTH === 50  PIPE_GAP - відступ між PIPE
+
+    if(checkHitWithPipe()){
+        endGame();
+        return; - зупиняємо 
+    }
+    if(birdX === pipeX - якшо позиції рівні значить птах пройшов між колонами){
+        increaseScore() збільшуємо лічильників
+    }
+
+    if(pipeX < -50){ коли позиція буде менше -50 pipeX то оновлюємо позицію  
+        pipeX = 400
+        pipeY = Math.floor(Math.random() * (350 - 40) + 40) рондомну наймена виста === 40 найбільна 350
+    }
+    if(bool){ якшо true 
+        pipeX -= 2.5 то рухаємо колони 
+        birdVelocity += birdAcceleration швидкість стрибка зменшується  
+        birdY += birdVelocity це сам стрибок для bird
+    }
+}
+
+setInterval(loop, 8);

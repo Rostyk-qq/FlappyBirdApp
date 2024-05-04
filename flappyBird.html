@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./flappyBird.css">    
+    <title>Flappy Bird</title>
+</head>
+<body>
+    <div class="container__game" id="container__game">
+        <canvas class="game__canvas" width="400" height="500" id="game__canvas"></canvas>
+        <div class="game__score" id="game__score">0</div>
+    </div>
+    <div class="end__menu" id="end__menu">
+        <h1>Game over!</h1>
+        <p>Score: <span class="end__score" id="end__score" >0</span></p>
+        <p>Best: <span class="best__score" id="best__score" >0</span></p>
+        <button class="restart__button" id="restart__button" >Restart</button>
+    </div>
+
+    <script src="./flappyBird.js" defer ></script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-family: 'Courier New', Courier, monospace;
+    background-image: linear-gradient(to right, #90ee90, #d4d4d4);
+    background-repeat: no-repeat;
+    display: grid;
+    place-items: center;
+}
+.container__game { 
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(300px, 70vw, 400px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 20px;
+}
+.blur__container{
+    filter: blur(5px);
+}
+
+.game__canvas { 
+    will-change: transform;
+    background: url('./assets/Flappy_Bird_Background.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: repeat-x;
+    border: 2px solid black;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px #111;
+    user-select: none;
+    z-index: 1;
+}
+.game__score { 
+    margin-top: 10px;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 1px -1px 1px #111;
+}
+.end__menu > *{
+    margin: 10px;
+}
+.end__menu { 
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: aliceblue;
+    border-radius: 10px;
+    display: none; /* changed */
+    flex-direction: column;
+    z-index: 1;
+    padding: 10px;
+}
+.end__menu h1{
+    font-size: 22px;
+}
+.end__score { 
+    font-weight: 800;
+}
+.best__score { 
+    font-weight: 800;
+}
+.restart__button { 
+    padding: 2px 5px;
+    border-radius: 10px;
+    border: 2px solid black;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    pointer-events: all;
+    white-space: no-repeat;
+    transition: transform .5s ease;
+    font-family: 'Courier New', Courier, monospace;
+}
+.restart__button:hover{
+    transform: translateY(-2px);
+    transition: transform .5s ease;
+}
+.restart__button:active{
+    background-color: lightcyan;
+    transition: all .5s ease;
+}
